@@ -1,9 +1,7 @@
 package main
 
-type Bytecode int
-
 const (
-	IADD Bytecode = iota // 1 , and so on
+	IADD int = iota // 1 , and so on
 	ISUB
 	IMUL
 	ILT
@@ -13,6 +11,8 @@ const (
 	BRF
 	ICONST
 	LOAD
+	CALL
+	RET
 	GLOAD
 	STORE
 	GSTORE
