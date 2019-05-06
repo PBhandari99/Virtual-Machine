@@ -42,7 +42,7 @@ func (vm *VM) stackPush(value int) {
 }
 
 func (vm *VM) nextInstruction() int {
-	instruction := vm.Stack[vm.IP]
+	instruction := vm.Code[vm.IP]
 	vm.IP++
 	return instruction
 }
@@ -50,6 +50,7 @@ func (vm *VM) nextInstruction() int {
 func (vm *VM) execute() {
 	var opcode int
 	for vm.IP < len(vm.Code) {
+		fmt.Printf("%x  %s\n", vm.IP, Instructions[vm.Code[vm.IP]].name)
 		opcode = vm.Code[vm.IP]
 		vm.IP++
 		switch opcode {
@@ -77,19 +78,21 @@ func (vm *VM) execute() {
 			break
 		case BRT:
 			a := vm.stackPop()
+			code := vm.nextInstruction()
 			if a == TRUE {
-				vm.IP = vm.nextInstruction()
+				vm.IP = code
 			}
 			break
 		case BRF:
 			a := vm.stackPop()
+			code := vm.nextInstruction()
 			if a == FALSE {
-				vm.IP = vm.nextInstruction()
+				vm.IP = code
 			}
 			break
 		case ILT:
-			a := vm.stackPop()
 			b := vm.stackPop()
+			a := vm.stackPop()
 			if a < b {
 				vm.stackPush(TRUE)
 			} else {
