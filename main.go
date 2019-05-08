@@ -1,5 +1,7 @@
 package main
 
+// import "fmt"
+
 const (
 	ip = 0
 )

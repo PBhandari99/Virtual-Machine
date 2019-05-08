@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 const (
 	FALSE              = 0
@@ -47,10 +50,29 @@ func (vm *VM) nextInstruction() int {
 	return instruction
 }
 
+func (vm *VM) dumpMemory(instr Instruction) string {
+	memBuffer := ""
+	memBuffer += fmt.Sprintf("%x  %s", vm.IP, instr.name)
+	// print the operands.
+	if instr.noOfArgs == 1 {
+		memBuffer += fmt.Sprintf(" %d", vm.Code[vm.IP+1])
+	} else if instr.noOfArgs == 2 {
+		memBuffer += fmt.Sprintf(" %d, %d", vm.Code[vm.IP+1], vm.Code[vm.IP+2])
+	}
+	// print the stack
+	memBuffer += fmt.Sprintf("\t\t[ ")
+	for i := 0; i <= vm.SP; i++ {
+		memBuffer += strconv.Itoa(vm.Stack[i]) + " "
+	}
+	memBuffer += "]"
+	return memBuffer
+}
+
 func (vm *VM) execute() {
 	var opcode int
 	for vm.IP < len(vm.Code) {
-		fmt.Printf("%x  %s\n", vm.IP, Instructions[vm.Code[vm.IP]].name)
+		instr := Instructions[vm.Code[vm.IP]]
+		fmt.Printf("%s\n", vm.dumpMemory(instr))
 		opcode = vm.Code[vm.IP]
 		vm.IP++
 		switch opcode {
